@@ -1,10 +1,6 @@
-# berkeley-spark
+# BerkeleyX: CS100.1x Introduction to Big Data with Apache Spark
 
-A Clojure library designed to ... well, that part is up to you.
-
-## Usage
-
-FIXME
+Exercises and Labs using Clojure (Sparkling)[http://gorillalabs.github.io/sparkling/]
 
 ## License
 
