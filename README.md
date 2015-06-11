@@ -1,6 +1,6 @@
 # BerkeleyX: CS100.1x Introduction to Big Data with Apache Spark
 
-Exercises and Labs using Clojure [Sparkling](http://gorillalabs.github.io/sparkling/)
+Exercises and Labs using Clojure ([Sparkling](http://gorillalabs.github.io/sparkling/))
 
 ## License
 
