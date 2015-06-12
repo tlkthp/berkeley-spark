@@ -3,7 +3,8 @@
             [sparkling.conf :as conf]
             [sparkling.core :as spark]
             [sparkling.destructuring :as s-de]
-            [berkeley-spark.fns :as fn]))
+            [berkeley-spark.fns :as fn]
+            [berkeley-spark.spark :as s]))
 
 ;;;;;;;;;;;;;
 ;;
@@ -160,15 +161,18 @@
 
 ; Retrieve the three smallest elements
 ; Sparkling does not provide wrapper fn for 'takeOrdered' so we have to use Java version
-(.takeOrdered filtered-rdd 3)
+;(.takeOrdered filtered-rdd 3)
+(s/take-ordered 3 filtered-rdd)
 
 ; Retrieve the five largest elements
 ; Sparkling does not provide wrapper fn for 'top' so we have to use Java version
-(.top filtered-rdd 5)
+;(.top filtered-rdd 5)
+(s/top 5 filtered-rdd)
 
 ; Pass a lambda function to takeOrdered to reverse the order
 ; filteredRDD.takeOrdered(4, lambda s: -s)
-(.takeOrdered filtered-rdd 3 fn/gt-compr)
+;(.takeOrdered filtered-rdd 3 fn/gt-compr)
+(s/take-ordered 3 fn/gt-compr filtered-rdd)
 
 ; # Efficiently sum the RDD using reduce
 (spark/reduce + filtered-rdd)
@@ -192,15 +196,18 @@
 ;; takeSample() and countByValue().
 
 ; takeSample reusing elements
-(.takeSample filtered-rdd true 6)
+;(.takeSample filtered-rdd true 6)
+(s/take-sample true 6 filtered-rdd)
 ;=> [5 2 9 9 1 1] ; will get different results on different runs
 
 ; takeSample without reuse
-(.takeSample filtered-rdd false 6)
+;(.takeSample filtered-rdd false 6)
+(s/take-sample false 6 filtered-rdd)
 ;=> [9 4 7 2 0 3] ; will get different results on different runs
 
 ; Set seed for predictability
-(.takeSample filtered-rdd true 6 500)
+;(.takeSample filtered-rdd true 6 500)
+(s/take-sample true 6 500 filtered-rdd)
 ;=> [4 5 9 7 6 3] ; gives same result for multiple runs
 
 ; Create new base RDD to show countByValue
@@ -296,22 +303,26 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ; Note that toDebugString also provides storage information
-(.toDebugString filtered-rdd)
+;(.toDebugString filtered-rdd)
+(conf/to-string filtered-rdd)
 ;=> "(8) My Filtered RDD MapPartitionsRDD[3] at filter at NativeMethodAccessorImpl.java:-2 [Memory Deserialized 1x Replicated]\n
 ; |  MapPartitionsRDD[2] at map at NativeMethodAccessorImpl.java:-2 [Memory Deserialized 1x Replicated]\n
 ; |  My First RDD ParallelCollectionRDD[0] at parallelize at NativeMethodAccessorImpl.java:-2 [Memory Deserialized 1x Replicated]"
 
 ; If we are done with the RDD we can unpersist it so that its memory can be reclaimed
-(.unpersist filtered-rdd)
+;(.unpersist filtered-rdd)
+(s/unpersist filtered-rdd)
 ;=> #<JavaRDD My Filtered RDD MapPartitionsRDD[3] at filter at NativeMethodAccessorImpl.java:-2>
 
 ; Storage level for a non cached RDD
-(.getStorageLevel filtered-rdd)
+;(.getStorageLevel filtered-rdd)
+(s/storage-level filtered-rdd)
 ;=> #<StorageLevel StorageLevel(false, false, false, false, 1)>
 
 ; Storage level for a cached RDD
 (spark/cache filtered-rdd)
-(.getStorageLevel filtered-rdd)
+;(.getStorageLevel filtered-rdd)
+(s/storage-level filtered-rdd)
 ;=> #<StorageLevel StorageLevel(false, true, false, true, 1)>
 
 ;;;;;;;;;;;;;
